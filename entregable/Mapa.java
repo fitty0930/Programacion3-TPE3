@@ -1,5 +1,7 @@
 package ProgramacionIII.tp3.entregable;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +15,7 @@ public class Mapa {
 
 	private Grafo<Integer> grafo; // sera un GND
 	private HashMap<Integer,Ciudad> ciudades;
+	private static final int MAX_BALANZAS=1;
 	
 	public Mapa() {
 		this.grafo = new GrafoNoDirigido<Integer>();
@@ -55,11 +58,45 @@ public class Mapa {
 			int idDestino = arco.getVerticeDestino(); // ID de ciudad destino
 			Ciudad ciudadAdyacente = this.ciudades.get(idDestino); // Objeto de ciudad destino
 		}*/
+
 		 EncontrarCaminos encontrarcam= new EncontrarCaminos(this.grafo, origen.getId(),destino.getId());
-		 System.out.println(encontrarcam.encontrarCaminos());
+		 ArrayList<ArrayList<Integer>> caminosencontrados=encontrarcam.encontrarCaminos();
+		 Iterator<ArrayList<Integer>> iterador = caminosencontrados.iterator();
+
+		 ArrayList<Integer> retorno= new ArrayList<Integer>();
+		 int kms=0;
+		 int kmsant=1000000; // un numero grandisimo
+		 int cantBalanzas=0;
+		 int cantBalanzasAnt=1000000; // un numero grandisimo
+		 while(iterador.hasNext()){
+		 	 cantBalanzas=0;
+			 kms=0;
+			 ArrayList<Integer> aux=iterador.next();
+			 for(int i=0; i<aux.size()-1;i++){
+			 	if(ciudades.get(aux.get(i)).isTieneBalanza()){
+					cantBalanzas+=1;
+				}
+			 	if(ciudades.get(aux.get(i+1)).isTieneBalanza()){
+					cantBalanzas+=1;
+				}
+			 	Arco<Integer> arco=grafo.obtenerArco(aux.get(i), aux.get(i+1));
+			 	kms +=  arco.getEtiqueta();
+			 }
+			 if(cantBalanzas<=cantBalanzasAnt && cantBalanzas<=MAX_BALANZAS*2){
+				 retorno = aux;
+			 }
+			 if(kmsant>kms && cantBalanzas<=MAX_BALANZAS*2) {
+				 retorno = aux;
+			 }
+			 System.out.println(kms+" kilometros");
+			 System.out.println(cantBalanzas+" numero de balanzas");
+
+			 kmsant=kms;
+			 cantBalanzasAnt=cantBalanzas;
+		 }
 
 		
-		return null;
+		return retorno;
 	}
 
 	

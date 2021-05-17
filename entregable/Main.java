@@ -79,8 +79,8 @@ public class Main {
 		mapa.addRuta(pehuajo, ayacucho, 540);
 		mapa.addRuta(ayacucho, rauch, 50);
 
-		
-		mapa.encontrarCamino(ayacucho, bolivar); // Busco el mejor camino entre ayacucho y bolivar
+//		mapa.borrarRuta(ayacucho, rauch); // Borro la ruta entre ayacucho-tandil
+		System.out.println(mapa.encontrarCamino(ayacucho, bolivar)); // Busco el mejor camino entre ayacucho y bolivar
 		
 //		mapa.borrarCiudad(ayacucho); // Borro la ciudad ayacucho
 //		mapa.borrarRuta(ayacucho, tandil); // Borro la ruta entre ayacucho-tandil
