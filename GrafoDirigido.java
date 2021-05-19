@@ -110,9 +110,11 @@ public class GrafoDirigido<T> implements Grafo<T> {
 	public Iterator<Integer> obtenerAdyacentes(int verticeId) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> adyacentes = new ArrayList<Integer>();
-		Iterator<Arco<T>> it = this.mapaDeVertices.get(verticeId).iterator();
-		while (it.hasNext()){
-			adyacentes.add(it.next().getVerticeDestino());
+		if(this.mapaDeVertices.get(verticeId)!=null){
+			Iterator<Arco<T>> it = this.mapaDeVertices.get(verticeId).iterator();
+			while (it.hasNext()){
+				adyacentes.add(it.next().getVerticeDestino());
+			}
 		}
 		return adyacentes.iterator();
 	}

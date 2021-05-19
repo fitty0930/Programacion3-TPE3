@@ -80,11 +80,32 @@ public class Main {
 		mapa.addRuta(ayacucho, rauch, 50);
 
 //		mapa.borrarRuta(ayacucho, rauch); // Borro la ruta entre ayacucho-tandil
-		System.out.println(mapa.encontrarCamino(ayacucho, bolivar)); // Busco el mejor camino entre ayacucho y bolivar
+//		System.out.println(mapa.encontrarCamino(ayacucho, bolivar)); // Busco el mejor camino entre ayacucho y bolivar
 		
 //		mapa.borrarCiudad(ayacucho); // Borro la ciudad ayacucho
 //		mapa.borrarRuta(ayacucho, tandil); // Borro la ruta entre ayacucho-tandil
-
+		// PRUEBAS DEL TPE
+		System.out.println("pruebas tpe");
+		System.out.println("orig");
+		mapa.encontrarCamino(azul, ayacucho);
+//		System.out.println("depre");
+//		mapa.encontrarCaminoDeprecado(azul, ayacucho);
+		System.out.println("orig");
+		mapa.encontrarCamino(rauch, mardelplata);
+//		System.out.println("depre");
+//		mapa.encontrarCaminoDeprecado(rauch, mardelplata);
+		System.out.println("orig");
+		mapa.encontrarCamino(mardelplata, pehuajo);
+//		System.out.println("depre");
+//		mapa.encontrarCaminoDeprecado(mardelplata, pehuajo);
+		mapa.borrarCiudad(ayacucho);
+		mapa.borrarRuta(tandil, rauch);
+		System.out.println("orig");
+		mapa.encontrarCamino(mardelplata, pehuajo); // el problema esta aca
+//		System.out.println("depre");
+//		mapa.encontrarCaminoDeprecado(mardelplata, pehuajo);
+//		System.out.println("romper");
+//		mapa.encontrarCamino(null,null);
 	}
 
 }

@@ -32,9 +32,7 @@ public class PathFinder {
             int verticeId = it.next();
             colores.put(verticeId, "blanco");
         }
-        if(ciudades.get(origen).isTieneBalanza()){
-            contadorBalanzas++;
-        }
+        
         return encontrarCaminos(this.origen, contadorBalanzas);
     }
 
@@ -43,42 +41,52 @@ public class PathFinder {
         int contador=0;
         contador+=contadorBalanzas;
 //        System.out.println(contador);
-        if(ciudades.get(vertice).isTieneBalanza()){
-            contador++;
-        }
 
         colores.put(vertice, "amarillo");
-
         ArrayList<ArrayList<Integer>> resultado = new ArrayList<>();
-        if(contador<=maxbalanzas){
+
             if (vertice == this.destino) {
                 ArrayList<Integer> unicoCamino = new ArrayList<>();
-                unicoCamino.add(vertice);
-                resultado.add(unicoCamino);
+                if(contador<=maxbalanzas){ // si es el destino no deberia sumar
+                    unicoCamino.add(vertice);
+                    resultado.add(unicoCamino);
+                }
             } else {
+                if(vertice!=this.origen){ // para que no me cuente si es el origen
+                    if(ciudades.get(vertice).isTieneBalanza()){
+                        contador++;
+                    }
+                }
 
                 Iterator<Integer> it = this.grafo.obtenerAdyacentes(vertice);
                 while (it.hasNext()) {
                     int adyacente = it.next();
-                    if (colores.get(adyacente).equals("blanco")) {
-                        ArrayList<ArrayList<Integer>> caminosParciales = encontrarCaminos(adyacente,contador);
+                    if(colores.get(adyacente)!=null){
+                        if (colores.get(adyacente).equals("blanco")) {
+                            ArrayList<ArrayList<Integer>> caminosParciales = encontrarCaminos(adyacente,contador);
 
-                        for (ArrayList<Integer> caminoParcial: caminosParciales) {
-                            ArrayList<Integer> caminoCompleto = new ArrayList<>();
-                            caminoCompleto.add(vertice);
-                            caminoCompleto.addAll(caminoParcial);
-                            resultado.add(caminoCompleto);
+                            for (ArrayList<Integer> caminoParcial: caminosParciales) {
+                                ArrayList<Integer> caminoCompleto = new ArrayList<>();
+
+                                if(contador<=maxbalanzas){
+                                    caminoCompleto.add(vertice);
+                                    caminoCompleto.addAll(caminoParcial);
+                                    resultado.add(caminoCompleto);
+                                }
+
+                            }
+
                         }
-
                     }
+
 
                 }
 
             }
-        }
 
 
         colores.put(vertice, "blanco");
+
 
         return resultado;
     }

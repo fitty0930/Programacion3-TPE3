@@ -44,17 +44,20 @@ public class EncontrarCaminos {
 			Iterator<Integer> it = this.grafo.obtenerAdyacentes(vertice);
 			while (it.hasNext()) {
 				int adyacente = it.next();
-				if (colores.get(adyacente).equals("blanco")) {
-					ArrayList<ArrayList<Integer>> caminosParciales = encontrarCaminos(adyacente);
-					
-					for (ArrayList<Integer> caminoParcial: caminosParciales) {
-						ArrayList<Integer> caminoCompleto = new ArrayList<>();
-						caminoCompleto.add(vertice);
-						caminoCompleto.addAll(caminoParcial);
-						resultado.add(caminoCompleto);
-					}
+				if(colores.get(adyacente)!=null){
+					if (colores.get(adyacente).equals("blanco")) {
+						ArrayList<ArrayList<Integer>> caminosParciales = encontrarCaminos(adyacente);
 
+						for (ArrayList<Integer> caminoParcial: caminosParciales) {
+							ArrayList<Integer> caminoCompleto = new ArrayList<>();
+							caminoCompleto.add(vertice);
+							caminoCompleto.addAll(caminoParcial);
+							resultado.add(caminoCompleto);
+						}
+
+					}
 				}
+
 					
 			}
 	

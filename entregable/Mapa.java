@@ -33,7 +33,9 @@ public class Mapa {
     }
 
     public void addRuta(Ciudad origen, Ciudad destino, int kilometros) {
-        this.grafo.agregarArco(origen.getId(), destino.getId(), kilometros);
+        if(this.grafo.contieneVertice(origen.getId()) && this.grafo.contieneVertice(origen.getId())){
+            this.grafo.agregarArco(origen.getId(), destino.getId(), kilometros);
+        }
     }
 
     public void borrarRuta(Ciudad origen, Ciudad destino) {
@@ -48,27 +50,28 @@ public class Mapa {
     public List<?> encontrarCamino(Ciudad origen, Ciudad destino) {
         ArrayList<Integer> retorno = new ArrayList<Integer>();
         HashMap<Integer, Ciudad> ciudadescopia= ciudades;
-        PathFinder pathfinder= new PathFinder(this.grafo, origen.getId(), destino.getId(), ciudadescopia, MAX_BALANZAS);
-        ArrayList<ArrayList<Integer>> caminosencontrados = pathfinder.pathFind();
-        Iterator<ArrayList<Integer>> iterador = caminosencontrados.iterator();
-        int kms=0;
-        int kmsant=1000000;
-//        System.out.println(caminosencontrados);
-        while(iterador.hasNext()){
-            kms=0;
-            ArrayList<Integer> aux = iterador.next();
-            for (int i = 0; i < aux.size() - 1; i++) {
-                Arco<Integer> arco = grafo.obtenerArco(aux.get(i), aux.get(i + 1));
-                kms += arco.getEtiqueta();
+        if(origen!=null&&destino!=null){
+            PathFinder pathfinder= new PathFinder(this.grafo, origen.getId(), destino.getId(), ciudadescopia, MAX_BALANZAS);
+            ArrayList<ArrayList<Integer>> caminosencontrados = pathfinder.pathFind();
+            Iterator<ArrayList<Integer>> iterador = caminosencontrados.iterator();
+            int kms=0;
+            int kmsant=1000000;
+            System.out.println(caminosencontrados);
+            while(iterador.hasNext()){
+                kms=0;
+                ArrayList<Integer> aux = iterador.next();
+                for (int i = 0; i < aux.size() - 1; i++) {
+                    Arco<Integer> arco = grafo.obtenerArco(aux.get(i), aux.get(i + 1));
+                    kms += arco.getEtiqueta();
+                }
+                if (kmsant > kms) {
+                    retorno = aux;
+                    imprimirRetorno(retorno, kms); // solo con fines visuales
+                }
+                kmsant = kms;
             }
-            if (kmsant > kms) {
-                retorno = aux;
-            }
-            kmsant = kms;
         }
 
-
-        imprimirRetorno(retorno, kms); // solo con fines visuales
         return retorno;
     }
 
@@ -89,14 +92,14 @@ public class Mapa {
             for (int i = 0; i < aux.size() - 1; i++) {
                 if (ciudades.get(aux.get(i)).isTieneBalanza()) {
                     if (i == 0) {
-                        cantBalanzas += 2; // parche nazi
+                        cantBalanzas += 0; // parche nazi
                     } else {
                         cantBalanzas += 1;
                     }
                 }
                 if (ciudades.get(aux.get(i + 1)).isTieneBalanza()) {
                     if (i == aux.size() - 1) {
-                        cantBalanzas += 2;
+                        cantBalanzas += 0;
                     } else {
                         cantBalanzas += 1;
                     }
@@ -112,14 +115,15 @@ public class Mapa {
             if (kmsant > kms && cantBalanzas <= MAX_BALANZAS) {
                 retorno = aux;
             }
-            System.out.println(kms + " kilometros"); // solo con fines visuales
-            System.out.println(cantBalanzas + " numero de balanzas"); // solo con fines visuales
+//            System.out.println(kms + " kilometros"); // solo con fines visuales
+//            System.out.println(cantBalanzas + " numero de balanzas"); // solo con fines visuales
 
             kmsant = kms;
             cantBalanzasAnt = cantBalanzas;
         }
 
         imprimirRetorno(retorno, kms); // solo con fines visuales
+        System.out.println(retorno);
         return retorno;
     }
 
