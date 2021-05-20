@@ -33,7 +33,7 @@ public class Mapa {
     }
 
     public void addRuta(Ciudad origen, Ciudad destino, int kilometros) {
-        if(this.grafo.contieneVertice(origen.getId()) && this.grafo.contieneVertice(origen.getId())){
+        if (this.grafo.contieneVertice(origen.getId()) && this.grafo.contieneVertice(origen.getId())) {
             this.grafo.agregarArco(origen.getId(), destino.getId(), kilometros);
         }
     }
@@ -49,16 +49,16 @@ public class Mapa {
      */
     public List<?> encontrarCamino(Ciudad origen, Ciudad destino) {
         ArrayList<Integer> retorno = new ArrayList<Integer>();
-        HashMap<Integer, Ciudad> ciudadescopia= ciudades;
-        if(origen!=null&&destino!=null){
-            PathFinder pathfinder= new PathFinder(this.grafo, origen.getId(), destino.getId(), ciudadescopia, MAX_BALANZAS);
+        HashMap<Integer, Ciudad> ciudadescopia = ciudades;
+        if (origen != null && destino != null) {
+            PathFinder pathfinder = new PathFinder(this.grafo, origen.getId(), destino.getId(), ciudadescopia, MAX_BALANZAS);
             ArrayList<ArrayList<Integer>> caminosencontrados = pathfinder.pathFind();
             Iterator<ArrayList<Integer>> iterador = caminosencontrados.iterator();
-            int kms=0;
-            int kmsant=1000000;
+            int kms = 0;
+            int kmsant = 1000000;
             System.out.println(caminosencontrados);
-            while(iterador.hasNext()){
-                kms=0;
+            while (iterador.hasNext()) {
+                kms = 0;
                 ArrayList<Integer> aux = iterador.next();
                 for (int i = 0; i < aux.size() - 1; i++) {
                     Arco<Integer> arco = grafo.obtenerArco(aux.get(i), aux.get(i + 1));
@@ -75,7 +75,8 @@ public class Mapa {
         return retorno;
     }
 
-    public List<?> encontrarCaminoDeprecado(Ciudad origen, Ciudad destino){
+
+    public List<?> encontrarCaminoDeprecado(Ciudad origen, Ciudad destino) {
         EncontrarCaminos encontrarcam = new EncontrarCaminos(this.grafo, origen.getId(), destino.getId());
         ArrayList<ArrayList<Integer>> caminosencontrados = encontrarcam.encontrarCaminos();
         Iterator<ArrayList<Integer>> iterador = caminosencontrados.iterator();
@@ -108,7 +109,7 @@ public class Mapa {
                 Arco<Integer> arco = grafo.obtenerArco(aux.get(i), aux.get(i + 1));
                 kms += arco.getEtiqueta();
             }
-            cantBalanzas=cantBalanzas/2;
+            cantBalanzas = cantBalanzas / 2;
             if (cantBalanzas <= cantBalanzasAnt && cantBalanzas <= MAX_BALANZAS) {
                 retorno = aux;
             }
