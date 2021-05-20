@@ -1,5 +1,7 @@
 package ProgramacionIII.tp3.entregable;
 
+import java.util.Iterator;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -85,27 +87,45 @@ public class Main {
 //		mapa.borrarCiudad(ayacucho); // Borro la ciudad ayacucho
 //		mapa.borrarRuta(ayacucho, tandil); // Borro la ruta entre ayacucho-tandil
 		// PRUEBAS DEL TPE
+		Iterator<Ciudad> iterador;
+		Solucion solutemp= new Solucion();
 		System.out.println("pruebas tpe");
-		System.out.println("orig");
-		mapa.encontrarCamino(azul, ayacucho);
-//		System.out.println("depre");
-//		mapa.encontrarCaminoDeprecado(azul, ayacucho);
-		System.out.println("orig");
-		mapa.encontrarCamino(rauch, mardelplata);
-//		System.out.println("depre");
-//		mapa.encontrarCaminoDeprecado(rauch, mardelplata);
-		System.out.println("orig");
-		mapa.encontrarCamino(mardelplata, pehuajo);
-//		System.out.println("depre");
-//		mapa.encontrarCaminoDeprecado(mardelplata, pehuajo);
+		System.out.println("origen azul destino ayacucho");
+		solutemp=mapa.encontrarCamino(azul, ayacucho);
+		iterador= solutemp.getCamino().iterator();
+		while(iterador.hasNext()){
+			System.out.println(iterador.next().getNombre());
+		}
+		System.out.println(solutemp.getKms());
+
+		System.out.println("origen rauch, destino mar del plata");
+		solutemp=mapa.encontrarCamino(rauch, mardelplata);
+		iterador= solutemp.getCamino().iterator();
+		while(iterador.hasNext()){
+			System.out.println(iterador.next().getNombre());
+		}
+		System.out.println(solutemp.getKms());
+
+		System.out.println("origen mar del plata, destino pehuajo antes de borrar");
+		solutemp=mapa.encontrarCamino(mardelplata, pehuajo);
+		iterador= solutemp.getCamino().iterator();
+		while(iterador.hasNext()){
+			System.out.println(iterador.next().getNombre());
+		}
+		System.out.println(solutemp.getKms());
+
+		System.out.println("borre ayacucho");
 		mapa.borrarCiudad(ayacucho);
+		System.out.println("borre la ruta tandil-rauch");
 		mapa.borrarRuta(tandil, rauch);
-		System.out.println("orig");
-		mapa.encontrarCamino(mardelplata, pehuajo); // el problema esta aca
-//		System.out.println("depre");
-//		mapa.encontrarCaminoDeprecado(mardelplata, pehuajo);
-//		System.out.println("romper");
-//		mapa.encontrarCamino(null,null);
+		System.out.println("origen mar del plata, destino pehuajo despues de borrar");
+		solutemp=mapa.encontrarCamino(mardelplata, pehuajo); // el problema esta aca
+		iterador= solutemp.getCamino().iterator();
+		while(iterador.hasNext()){
+			System.out.println(iterador.next().getNombre());
+		}
+		System.out.println(solutemp.getKms());
+
 	}
 
 }

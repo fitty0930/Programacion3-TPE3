@@ -16,7 +16,7 @@ public class PathFinder {
     private int destino;
     private HashMap<Integer, Ciudad> ciudades;
     private int maxbalanzas;
-    private int kilometros=10000;
+    private int kilometros = 10000;
 
     public PathFinder(Grafo<?> grafo, int origen, int destino, HashMap<Integer, Ciudad> ciudades, int maxbalanzas) {
         this.grafo = grafo;
@@ -27,34 +27,42 @@ public class PathFinder {
         this.maxbalanzas = maxbalanzas;
     }
 
-    public ArrayList<ArrayList<Integer>> pathFind() {
+    public Solucion pathFind() {
         int contadorBalanzas = 0;
         Iterator<Integer> it = this.grafo.obtenerVertices();
         while (it.hasNext()) {
             int verticeId = it.next();
             colores.put(verticeId, "blanco");
         }
+        this.kilometros = 10000;
 
-        return encontrarCaminos(this.origen, contadorBalanzas, 0);
+        ArrayList<Ciudad> resultado = encontrarCamino(this.origen, contadorBalanzas, 0);
+
+        Solucion solucion=new Solucion();
+        if (!resultado.isEmpty()) {
+            solucion.setKms(kilometros);
+            solucion.setCamino(resultado);
+        }
+
+        return solucion;
     }
 
-    private ArrayList<ArrayList<Integer>> encontrarCaminos(int vertice, int contadorBalanzas, int kmsPasados) {
+    private ArrayList<Ciudad> encontrarCamino(int vertice, int contadorBalanzas, int kmsPasados) {
         // le paso contador balanzas
         // cada vez que itero y lo reviso DENTRO de la función
         int contador = 0;
         contador += contadorBalanzas;
-        int kms =0;
-        kms+=kmsPasados;
+        int kms = 0;
+        kms += kmsPasados;
 
         colores.put(vertice, "amarillo");
-        ArrayList<ArrayList<Integer>> resultado = new ArrayList<>();
+
+        ArrayList<Ciudad> resultado = new ArrayList<Ciudad>();
 
         if (vertice == this.destino) {
-            ArrayList<Integer> unicoCamino = new ArrayList<>();
-            if (contador <= maxbalanzas && kms<this.kilometros) { // si es el destino no deberia sumar
-                unicoCamino.add(vertice);
-                resultado.add(unicoCamino);
-                kilometros=kms;
+            if (contador <= maxbalanzas && kms < this.kilometros) {
+                resultado.add(ciudades.get(vertice)); // agregar la ciudad
+                this.kilometros = kms;
             }
         } else {
             if (vertice != this.origen) {
@@ -64,40 +72,33 @@ public class PathFinder {
             }
             if (contador <= maxbalanzas) {
                 Iterator<Integer> it = this.grafo.obtenerAdyacentes(vertice);
-                while (it.hasNext()) {
+                while (it.hasNext() && kilometros > kms) {
                     int adyacente = it.next();
-                    // TENGO QUE HACERLO ACA QUE ES DONDE BUSCO ADYACENTES
-                    Arco<Integer> arco= (Arco<Integer>) grafo.obtenerArco(vertice,adyacente);
-                    kms+=arco.getEtiqueta();
+                    Arco<Integer> arco = (Arco<Integer>) grafo.obtenerArco(vertice, adyacente);
+                    kms += arco.getEtiqueta();
+
                     if (colores.get(adyacente) != null) {
                         if (colores.get(adyacente).equals("blanco")) {
-                            ArrayList<ArrayList<Integer>> caminosParciales = encontrarCaminos(adyacente, contador, kms);
-                            for (ArrayList<Integer> caminoParcial : caminosParciales) {
-                                ArrayList<Integer> caminoCompleto = new ArrayList<>();
-                                if (contador <= maxbalanzas) {
-                                    caminoCompleto.add(vertice);
-                                    caminoCompleto.addAll(caminoParcial);
-                                    resultado.add(caminoCompleto);
-                                }
-
+                            ArrayList<Ciudad> caminoParcial = encontrarCamino(adyacente, contador, kms);
+                            if (!caminoParcial.isEmpty()) {
+                                resultado.add(ciudades.get(vertice));
+                                resultado.addAll(caminoParcial);
                             }
-
                         }
                     }
-
+                    kms=kms-arco.getEtiqueta(); // es porque me estoy quedando los caminos que ya recorri
 
                 }
             }
 
-
         }
 
-
-        colores.put(vertice, "blanco");
-
+        colores.put(vertice, "negro");
 
         return resultado;
+
     }
+
 
 }
 
