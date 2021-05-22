@@ -18,6 +18,7 @@ public class PathFinder {
     private int maxbalanzas;
     private int kilometros = 10000;
 
+    // O(1)
     public PathFinder(Grafo<?> grafo, int origen, int destino, HashMap<Integer, Ciudad> ciudades, int maxbalanzas) {
         this.grafo = grafo;
         this.colores = new HashMap<>();
@@ -27,6 +28,9 @@ public class PathFinder {
         this.maxbalanzas = maxbalanzas;
     }
 
+    // O(n+m) = O(2n) = O(n)
+    // donde n es la cantidad de ciudades del metodo encontrarCamino y m es la cantidad de ciudades
+    // iteradas en el hashmap de colores
     public Solucion pathFind() {
         int contadorBalanzas = 0;
         Iterator<Integer> it = this.grafo.obtenerVertices();
@@ -47,6 +51,7 @@ public class PathFinder {
         return solucion;
     }
 
+    // O(n) donde n son la cantidad de ciudades (el peor caso es que el contador de balanzas sea un numero muy alto)
     private ArrayList<Ciudad> encontrarCamino(int vertice, int contadorBalanzas, int kmsPasados) {
         // le paso contador balanzas
         // cada vez que itero y lo reviso DENTRO de la función

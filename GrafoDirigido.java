@@ -9,27 +9,27 @@ import java.util.Iterator;
 public class GrafoDirigido<T> implements Grafo<T> {
 	
 	private HashMap<Integer,ArrayList<Arco<T>>> mapaDeVertices;
-	
-	// Tercera vuelta
+
+	// O(1)
 	public GrafoDirigido(){
 		this.mapaDeVertices = new HashMap<Integer,ArrayList<Arco<T>>>();
 	}
 	
-	@Override
+	@Override // O(1)
 	public void agregarVertice(int verticeId) {
 		// TODO Auto-generated method stub}
 		if(!this.mapaDeVertices.containsKey(verticeId))
 		this.mapaDeVertices.put(verticeId, new ArrayList<Arco<T>>());
 	}
 
-	@Override
+	@Override // O(1)
 	public void borrarVertice(int verticeId) {
 		// TODO Auto-generated method stub
 		if(this.mapaDeVertices.containsKey(verticeId))
 			this.mapaDeVertices.remove(verticeId);
 	}
 
-	@Override
+	@Override // O(1)
 	public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
 		// TODO Auto-generated method stub
 		if(this.mapaDeVertices.containsKey(verticeId1) && this.mapaDeVertices.containsKey(verticeId2)){
@@ -43,7 +43,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
 
 	}
 
-	@Override // O(n) donde n es la cantidad de arcos de todo mi grafo
+	@Override // O(n) donde n es la cantidad de arcos salientes del vertice1, ver metodo obtenerArco()
 	public void borrarArco(int verticeId1, int verticeId2) {
 		// TODO Auto-generated method stub
 		Arco<T> arco = this.obtenerArco(verticeId1, verticeId2);
@@ -52,24 +52,25 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		}
 	}
 
-	@Override
+	@Override // O(1)
 	public boolean contieneVertice(int verticeId) {
 		return this.mapaDeVertices.containsKey(verticeId);
 	}
 
-	@Override // O(n) donde n es la cantidad de arcos de todo mi grafo
+	@Override // O(n) donde n es la cantidad de arcos salientes del vertice1, ver metodo obtenerArco()
 	public boolean existeArco(int verticeId1, int verticeId2) { 
 			return this.obtenerArco(verticeId1, verticeId2) != null;
 	}
 
-	@Override // O(n) donde n es la cantidad de arcos de todo mi grafo
+	@Override // O(n) donde n es la cantidad de arcos salientes del vertice1
+	// a lo sumo tengo que iterarlos a todos
 	public Arco<T> obtenerArco(int verticeId1, int verticeId2) {
 		if(this.mapaDeVertices.containsKey(verticeId1)){
 			ArrayList<Arco<T>> arcos = this.mapaDeVertices.get(verticeId1);
 			Iterator<Arco<T>> it = arcos.iterator();
 			Arco<T> arco = null;
 			boolean found = false;
-			while(it.hasNext() && found == false){
+			while(it.hasNext() && !found){
 				arco = it.next();
 				if(arco.getVerticeDestino() == verticeId2){
 					found = true;
@@ -84,13 +85,13 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		return null;
 	}
 
-	@Override
+	@Override // O(1)
 	public int cantidadVertices() {
 		// TODO Auto-generated method stub
 		return this.mapaDeVertices.keySet().size();
 	}
 
-	@Override
+	@Override // O(n) donde n es la suma de todos los largos del arraylist de cada vertice
 	public int cantidadArcos() {
 		// TODO Auto-generated method stub
 		Integer cantidadArcos = 0;
@@ -106,7 +107,8 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		return this.mapaDeVertices.keySet().iterator();
 	}
 
-	@Override
+	@Override // O(n) donde n es la cantidad de arcos salientes del vertice pasado por parametros
+	// tambien n es la cantidad de vertices destino
 	public Iterator<Integer> obtenerAdyacentes(int verticeId) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> adyacentes = new ArrayList<Integer>();
@@ -118,12 +120,8 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		}
 		return adyacentes.iterator();
 	}
-
-	// O(A) arcos del grafo
-	// O(a) arcos salientes de un vertice
-	// O(V) vertices del grafo
 	
-	@Override // O(A) donde A es la cantidad total de arcos
+	@Override // O(n) donde n es la cantidad total de arcos
 	public Iterator<Arco<T>> obtenerArcos() {
 		
 		ArrayList<Arco<T>> todosLosArcos = new ArrayList<>();
@@ -139,11 +137,8 @@ public class GrafoDirigido<T> implements Grafo<T> {
 	}
 
 	@Override
-	// O(n) donde n es la cantidad de arcos de todo mi grafo
+	// O(n) donde n es la cantidad de arcos salientes del vertice1
 	public Iterator<Arco<T>> obtenerArcos(int verticeId) {
-				
-		// for hasta encontrar el objeto Vertice con el ID verticeId
-		
 		ArrayList<Arco<T>> arcos = this.mapaDeVertices.get(verticeId);
 		return arcos.iterator();
 	}
