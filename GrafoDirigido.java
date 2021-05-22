@@ -92,6 +92,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
 	}
 
 	@Override // O(n) donde n es la cantidad de vertices
+	// los recorro todos por su clave y les pido el size de su arraylist valor
 	public int cantidadArcos() {
 		// TODO Auto-generated method stub
 		Integer cantidadArcos = 0;
