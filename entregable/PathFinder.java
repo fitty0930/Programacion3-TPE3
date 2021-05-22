@@ -28,7 +28,7 @@ public class PathFinder {
         this.maxbalanzas = maxbalanzas;
     }
 
-    // O(n+m) = O(2n) = O(n)
+    // O(n!+m) = > O(n!)
     // donde n es la cantidad de ciudades del metodo encontrarCamino y m es la cantidad de ciudades
     // iteradas en el hashmap de colores
     public Solucion pathFind() {
@@ -38,21 +38,16 @@ public class PathFinder {
             int verticeId = it.next();
             colores.put(verticeId, "blanco");
         }
-        this.kilometros = 10000;
 
-        ArrayList<Ciudad> resultado = encontrarCamino(this.origen, contadorBalanzas, 0);
-
-        Solucion solucion=new Solucion();
-        if (!resultado.isEmpty()) {
-            solucion.setKms(kilometros);
-            solucion.setCamino(resultado);
+        Solucion solucion = encontrarCamino(this.origen, contadorBalanzas, 0);
+        if (solucion.getKms() == this.kilometros) {
+            solucion.setKms(0);
         }
-
         return solucion;
     }
 
-    // O(n) donde n son la cantidad de ciudades (el peor caso es que el contador de balanzas sea un numero muy alto)
-    private ArrayList<Ciudad> encontrarCamino(int vertice, int contadorBalanzas, int kmsPasados) {
+    // O(n!) donde n son la cantidad de ciudades (el peor caso es que el contador de balanzas sea un numero muy alto)
+    private Solucion encontrarCamino(int vertice, int contadorBalanzas, int kmsPasados) {
         // le paso contador balanzas
         // cada vez que itero y lo reviso DENTRO de la función
         int contador = 0;
@@ -63,11 +58,14 @@ public class PathFinder {
         colores.put(vertice, "amarillo");
 
         ArrayList<Ciudad> resultado = new ArrayList<Ciudad>();
+        Solucion solucion = new Solucion();
+        solucion.setKms(this.kilometros);
 
         if (vertice == this.destino) {
-            if (contador <= maxbalanzas && kms < this.kilometros) {
+            if (contador <= maxbalanzas && kms < solucion.getKms()) {
                 resultado.add(ciudades.get(vertice)); // agregar la ciudad
-                this.kilometros = kms;
+                solucion.setCamino(resultado);
+                solucion.setKms(kms);
             }
         } else {
             if (vertice != this.origen) {
@@ -77,30 +75,38 @@ public class PathFinder {
             }
             if (contador <= maxbalanzas) {
                 Iterator<Integer> it = this.grafo.obtenerAdyacentes(vertice);
-                while (it.hasNext() && kilometros > kms) {
+                while (it.hasNext()) {
                     int adyacente = it.next();
                     Arco<Integer> arco = (Arco<Integer>) grafo.obtenerArco(vertice, adyacente);
                     kms += arco.getEtiqueta();
 
                     if (colores.get(adyacente) != null) {
                         if (colores.get(adyacente).equals("blanco")) {
-                            ArrayList<Ciudad> caminoParcial = encontrarCamino(adyacente, contador, kms);
-                            if (!caminoParcial.isEmpty()) {
-                                resultado.add(ciudades.get(vertice));
-                                resultado.addAll(caminoParcial);
+                            Solucion caminoParcial = encontrarCamino(adyacente, contador, kms);
+                            if (!caminoParcial.getCamino().isEmpty()) {
+                                if (solucion.getKms() > caminoParcial.getKms()) {
+                                    resultado.clear();
+                                    resultado.add(ciudades.get(vertice));
+                                    resultado.addAll(caminoParcial.getCamino());
+
+                                    solucion.setCamino(resultado);
+                                    solucion.setKms(caminoParcial.getKms());
+                                }
+
                             }
                         }
                     }
-                    kms=kms-arco.getEtiqueta(); // es porque me estoy quedando los caminos que ya recorri
+
+                    kms = kms - arco.getEtiqueta(); // es porque me estoy quedando los caminos que ya recorri
 
                 }
             }
 
         }
 
-        colores.put(vertice, "negro");
+        colores.put(vertice, "blanco"); // queda blanco para que pueda reingresar al vertice
 
-        return resultado;
+        return solucion;
 
     }
 

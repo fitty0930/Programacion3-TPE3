@@ -1,7 +1,5 @@
 package ProgramacionIII.tp3;
 
-import ProgramacionIII.tp3.Arco;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,8 +23,10 @@ public class GrafoDirigido<T> implements Grafo<T> {
 	@Override // O(1)
 	public void borrarVertice(int verticeId) {
 		// TODO Auto-generated method stub
-		if(this.mapaDeVertices.containsKey(verticeId))
+		if(this.mapaDeVertices.containsKey(verticeId)){
 			this.mapaDeVertices.remove(verticeId);
+		}
+
 	}
 
 	@Override // O(1)
@@ -91,7 +91,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		return this.mapaDeVertices.keySet().size();
 	}
 
-	@Override // O(n) donde n es la suma de todos los largos del arraylist de cada vertice
+	@Override // O(n) donde n es la cantidad de vertices
 	public int cantidadArcos() {
 		// TODO Auto-generated method stub
 		Integer cantidadArcos = 0;
@@ -102,13 +102,12 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		return cantidadArcos;
 	}
 
-	@Override // O(1) es solo crear un iterador y devolverlo
+	@Override // O(1)
 	public Iterator<Integer> obtenerVertices() {
 		return this.mapaDeVertices.keySet().iterator();
 	}
 
 	@Override // O(n) donde n es la cantidad de arcos salientes del vertice pasado por parametros
-	// tambien n es la cantidad de vertices destino
 	public Iterator<Integer> obtenerAdyacentes(int verticeId) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> adyacentes = new ArrayList<Integer>();
@@ -137,7 +136,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
 	}
 
 	@Override
-	// O(n) donde n es la cantidad de arcos salientes del vertice1
+	// O(1)
 	public Iterator<Arco<T>> obtenerArcos(int verticeId) {
 		ArrayList<Arco<T>> arcos = this.mapaDeVertices.get(verticeId);
 		return arcos.iterator();

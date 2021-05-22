@@ -41,7 +41,7 @@ public class Mapa {
         this.grafo.borrarArco(origen.getId(), destino.getId());
     }
 
-    // O(n) donde n es funcion de la cantidad de ciudades del mapa
+    // O(n!) donde n es funcion de la cantidad de ciudades del mapa
     public Solucion encontrarCamino(Ciudad origen, Ciudad destino) {
         ArrayList<Integer> retorno = new ArrayList<Integer>();
         PathFinder pathfinder = new PathFinder(this.grafo, origen.getId(), destino.getId(), ciudades, maximodebalanzas);

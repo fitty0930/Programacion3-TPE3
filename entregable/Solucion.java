@@ -12,19 +12,19 @@ public class Solucion {
         this.kms=0;
     }
 
-    //    O(n)
+    //    O(1)
     public int getKms() {
         return kms;
     }
-    //    O(n)
+    //    O(1)
     public void setKms(int kms) {
         this.kms = kms;
     }
-    //    O(n)
+    //    O(1)
     public ArrayList<Ciudad> getCamino() {
         return camino;
     }
-    //    O(n)
+    //    O(1)
     public void setCamino(ArrayList<Ciudad> camino) {
         this.camino = camino;
     }
