@@ -68,18 +68,16 @@ public class PathFinder {
                 solucion.setKms(kms);
             }
         } else {
-            if (vertice != this.origen) {
-                if (ciudades.get(vertice).isTieneBalanza()) {
+
+            Iterator<Integer> it = this.grafo.obtenerAdyacentes(vertice);
+            while (it.hasNext()) {
+                int adyacente = it.next();
+                Arco<Integer> arco = (Arco<Integer>) grafo.obtenerArco(vertice, adyacente);
+                kms += arco.getEtiqueta();
+                if (ciudades.get(adyacente).isTieneBalanza() && adyacente!=this.destino) {
                     contador++;
                 }
-            }
-            if (contador <= maxbalanzas) {
-                Iterator<Integer> it = this.grafo.obtenerAdyacentes(vertice);
-                while (it.hasNext()) {
-                    int adyacente = it.next();
-                    Arco<Integer> arco = (Arco<Integer>) grafo.obtenerArco(vertice, adyacente);
-                    kms += arco.getEtiqueta();
-
+                if(contador<=this.maxbalanzas){
                     if (colores.get(adyacente) != null) {
                         if (colores.get(adyacente).equals("blanco")) {
                             Solucion caminoParcial = encontrarCamino(adyacente, contador, kms);
@@ -88,19 +86,20 @@ public class PathFinder {
                                     resultado.clear();
                                     resultado.add(ciudades.get(vertice));
                                     resultado.addAll(caminoParcial.getCamino());
-
                                     solucion.setCamino(resultado);
                                     solucion.setKms(caminoParcial.getKms());
                                 }
-
                             }
                         }
                     }
-
-                    kms = kms - arco.getEtiqueta(); // es porque me estoy quedando los caminos que ya recorri
-
                 }
+                if (ciudades.get(adyacente).isTieneBalanza() && adyacente!=this.destino) {
+                    contador--;
+                }
+                kms = kms - arco.getEtiqueta(); // es porque me estoy quedando los caminos que ya recorri
+
             }
+
 
         }
 

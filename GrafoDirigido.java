@@ -3,9 +3,14 @@ package ProgramacionIII.tp3;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 public class GrafoDirigido<T> implements Grafo<T> {
-	
+	/*REACOMODAR CON
+			A = ARCOS TOTALES
+			a = ARCOS SALIENTES
+			v = CANTIDAD DE VERTICES*/
+	protected int cantidadArcos=0;
 	private HashMap<Integer,ArrayList<Arco<T>>> mapaDeVertices;
 
 	// O(1)
@@ -20,16 +25,21 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		this.mapaDeVertices.put(verticeId, new ArrayList<Arco<T>>());
 	}
 
-	@Override // O(1)
+	@Override // O(v+a) en el peor de los casos todos los vertices tienen 1 arco con destino verticeid
+	// + el existe arco que es de costo O(a)
 	public void borrarVertice(int verticeId) {
 		// TODO Auto-generated method stub
 		if(this.mapaDeVertices.containsKey(verticeId)){
+			Set<Integer> keys=this.mapaDeVertices.keySet();
+			for ( Integer key : keys ) {
+					borrarArco(key, verticeId);
+			}
 			this.mapaDeVertices.remove(verticeId);
 		}
 
 	}
 
-	@Override // O(1)
+	@Override // O(a) donde a son los arcos salientes del vertice 1
 	public void agregarArco(int verticeId1, int verticeId2, T etiqueta) {
 		// TODO Auto-generated method stub
 		if(this.mapaDeVertices.containsKey(verticeId1) && this.mapaDeVertices.containsKey(verticeId2)){
@@ -38,18 +48,19 @@ public class GrafoDirigido<T> implements Grafo<T> {
 			if(!arcos.contains(newArco)){
 				arcos.add(newArco);
 				this.mapaDeVertices.put(verticeId1, arcos);
+				this.cantidadArcos++;
 			}
 		}
 
 	}
 
-	@Override // O(n) donde n es la cantidad de arcos salientes del vertice1, ver metodo obtenerArco()
+	@Override // O(a) donde a es la cantidad de arcos salientes del vertice1, ver metodo obtenerArco()
 	public void borrarArco(int verticeId1, int verticeId2) {
 		// TODO Auto-generated method stub
-		Arco<T> arco = this.obtenerArco(verticeId1, verticeId2);
-		if(arco != null){
-			this.mapaDeVertices.get(verticeId1).remove(arco);
-		}
+		Arco<Integer>arcoBorrar= new Arco<Integer>( verticeId1, verticeId2, 0);
+		ArrayList<Arco<T>> arcos= this.mapaDeVertices.get(verticeId1);
+		this.mapaDeVertices.get(verticeId1).remove(arcoBorrar);
+		this.cantidadArcos--;
 	}
 
 	@Override // O(1)
@@ -57,12 +68,12 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		return this.mapaDeVertices.containsKey(verticeId);
 	}
 
-	@Override // O(n) donde n es la cantidad de arcos salientes del vertice1, ver metodo obtenerArco()
+	@Override // O(a) es la cantidad de arcos salientes del vertice1, ver metodo obtenerArco()
 	public boolean existeArco(int verticeId1, int verticeId2) { 
 			return this.obtenerArco(verticeId1, verticeId2) != null;
 	}
 
-	@Override // O(n) donde n es la cantidad de arcos salientes del vertice1
+	@Override // O(a)
 	// a lo sumo tengo que iterarlos a todos
 	public Arco<T> obtenerArco(int verticeId1, int verticeId2) {
 		if(this.mapaDeVertices.containsKey(verticeId1)){
@@ -91,16 +102,10 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		return this.mapaDeVertices.keySet().size();
 	}
 
-	@Override // O(n) donde n es la cantidad de vertices
-	// los recorro todos por su clave y les pido el size de su arraylist valor
+	@Override // O(1)
 	public int cantidadArcos() {
 		// TODO Auto-generated method stub
-		Integer cantidadArcos = 0;
-		Iterator<Integer> it = this.mapaDeVertices.keySet().iterator();
-		while (it.hasNext()) {
-			cantidadArcos += this.mapaDeVertices.get(it.next()).size();
-		}
-		return cantidadArcos;
+		return this.cantidadArcos;
 	}
 
 	@Override // O(1)
@@ -108,7 +113,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		return this.mapaDeVertices.keySet().iterator();
 	}
 
-	@Override // O(n) donde n es la cantidad de arcos salientes del vertice pasado por parametros
+	@Override // O(a)
 	public Iterator<Integer> obtenerAdyacentes(int verticeId) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> adyacentes = new ArrayList<Integer>();
@@ -121,7 +126,7 @@ public class GrafoDirigido<T> implements Grafo<T> {
 		return adyacentes.iterator();
 	}
 	
-	@Override // O(n) donde n es la cantidad total de arcos
+	@Override // O(v*a)=O(A) donde n es la cantidad total de arcos
 	public Iterator<Arco<T>> obtenerArcos() {
 		
 		ArrayList<Arco<T>> todosLosArcos = new ArrayList<>();
